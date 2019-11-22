@@ -1,0 +1,72 @@
+<% include ../partials/header %>
+			
+<script>
+		
+		$(document).ready(function(){
+		
+									 
+			$('#pagination-container').pagination({
+		        dataSource: function(done) 
+							{
+							$.ajax({
+							type: 'GET',
+							url: 'http://localhost:4000/cari2/<%= namabuatajax %>',
+							success: function(response) {
+							done(response);
+							}
+							});
+							},
+				pageSize: 7,
+				showPageNumbers: true,
+				showNavigator: true,
+				showGoInput: true,
+				showGoButton: true,
+				formatResult: function(data) {
+				  var result = [];
+					for (var i = 0, len = data.length; i < len; i++) {
+						result.push(
+						[
+						data[i].id,
+						data[i].nama,
+						data[i].usia,
+						data[i].periode_sejarah,
+						data[i].tempat_diutus,
+						data[i].tempat_wafat,
+						data[i].sebutan_kaum,
+						data[i].jumlah_disebut
+						]);
+					}
+					 return result;
+				},
+		
+		callback: function(data, pagination) {
+			var html = simpleTemplating(data);
+			$('#data-container').html(html);
+		}
+		});
+		
+		$('#nama_nabi_atau_rasul').keyup(function(e){
+			if(e.keyCode == 13)
+			{
+			var isitext = $("#nama_nabi_atau_rasul").val();
+			window.location.href="/cari/" + isitext;	
+			}
+		});
+						 
+			 
+						 
+function simpleTemplating(data) {
+    var html = '<table><tr><td>NO</td><td>NAMA</td><td>USIA</td><td>PERIODE SEJARAH</td><td>TEMPAT DIUTUS</td><td>TEMPAT WAFAT</td><td>SEBUTAN KAUM</td><td>JUMLAH DISEBUT</td></tr>';
+    $.each(data, function(index, item){
+        html += '<tr><td>'+ item[0] +'</td><td>'+ item[1] +'</td><td>'+ item[2] +'</td><td>'+ item[3] +'</td><td>'+ item[4] +'</td><td>'+ item[5] +'</td><td>'+ item[6] +'</td><td>'+ item[7] +'</td></tr>';
+    });
+    html += '</table>';
+    return html;
+}
+	
+			
+		});
+		</script>
+	<% include ../partials/footer %>
+
+
